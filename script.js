@@ -1,6 +1,8 @@
 let state = "";
 let mem = "";
-let operation = "add";
+let operation = "";
+
+const disp = document.getElementsByClassName('display');
 
 function add(a, b) {
     state = a + b;
