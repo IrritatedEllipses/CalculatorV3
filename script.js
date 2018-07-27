@@ -3,21 +3,35 @@ let mem = "";
 let operation = "";
 
 const disp = document.getElementsByClassName('display');
+const calcMain = document.querySelector('.buttonGroup');
+
+console.log(calcMain)
+
+
+calcMain.addEventListener('click', buttonHandler);
+
+function buttonHandler(event) {
+    let target = event.target;
+    if (target.className === "numBtn") {
+        console.log('working');
+      disp.innerText += target.innerText;
+    }
+}
 
 function add(a, b) {
-    state = a + b;
+    mem = a + b;
 }
 
 function sub(a, b) {
-    state = a - b;
+    mem = a - b;
 }
 
 function div(a, b) {
-    state = a / b;
+    mem = a / b;
 }
 
 function mult(a, b) {
-    state = a * b;
+    mem = a * b;
 }
 
 function operate(op) {
