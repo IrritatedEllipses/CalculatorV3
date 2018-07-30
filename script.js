@@ -1,6 +1,7 @@
 let state = "";
 let mem = "";
 let operation = "";
+let answer = "";
 
 const display = document.querySelector('.display');
 const calcMain = document.querySelector('.buttonGroup');
@@ -9,25 +10,31 @@ calcMain.addEventListener('click', buttonHandler);
 
 function buttonHandler(event) {
     let target = event.target;
-    if (target.classList.contains('numBtn') && display.innerText.length < 8) {
+    if (target.classList.contains('numBtn') && display.innerText.length < 10) {
         state += target.innerText;
         display.innerText = state;
-    } else if (target.classList.contains('opBtn') && (state !== "")) {
-        if (operation == "") {
-            operation += target.id;
-            mem = state;
-            state = "";
-            display.innerText = "0";
+    } else if (target.classList.contains('opBtn')) {
+        if (!operation) {
+            if ((mem) && (state)){
+                operate(target.id)
+            } else if ((mem) && (!state)) {
+                operation += target.id;
+                state = "";
+                
+            }
         } else {
-            operate(target.id)
-
-
+            operation = target.id;
+            operate(target.id);
 
         }
     } else if (target.classList.contains('equal')) {
-        operate(operator)
+        if ((mem) && (state)) {
+            operate(operation);
+        } else {
+            console.log("empty operation")
+        }
     } else if (target.classList.contains('clr')) {
-        clear()
+        clear();
     } else {
         display.innerText = "Err";
     }
@@ -36,22 +43,30 @@ function buttonHandler(event) {
 function operate(op) {
     switch (op) {
         case "add":
-            console.log("adding");
-            mem = add(parseFloat(mem), parseFloat(state));
-            state = "";
-            display.innerText = mem;
-            operator = "";
+            answer = add(parseFloat(mem), parseFloat(state));
+            equalFinish();
             break;
         case "sub":
-            sub(parseFloat(mem), parseFloat(state));
+            answer = sub(parseFloat(mem), parseFloat(state));
+            equalFinish();
             break;
-        case "div":
-            div(parseFloat(mem), parseFloat(state));
+        case "divide":
+            answer = divide(parseFloat(mem), parseFloat(state));
+            equalFinish();
             break;
         case "mult":
-            mult(parseFloat(mem), parseFloat(state));
+            answer = mult(parseFloat(mem), parseFloat(state));
+            equalFinish();
             break;
     }
+}
+
+
+function equalFinish() {
+    state = "";
+    mem = answer;
+    display.innerText = answer;
+    operation = "";
 }
 
 function clear() {
@@ -59,7 +74,12 @@ function clear() {
     mem = "";
     display.innerText = "0";
     operator = "";
-    console.log(state, mem, display.innerText, operator, "We're clear")
+    console.log(state, mem, display.innerText, operator, "We're clear");
+}
+
+function error() {
+    display.innerText = "ERROR"
+    clear()
 }
 
 function add(a, b) {
@@ -67,11 +87,15 @@ function add(a, b) {
 }
 
 function sub(a, b) {
-    a - b;
+    return a - b;
 }
 
-function div(a, b) {
-    a / b;
+function divide(a, b) {
+    if (b === "0") {
+        error();
+    } else {
+        return a / b;
+    }
 }
 
 function mult(a, b) {
