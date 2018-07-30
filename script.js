@@ -1,6 +1,6 @@
 let state = "";
 let mem = "";
-let operation = "";
+let op = "";
 let answer = "";
 
 const display = document.querySelector('.display');
@@ -10,34 +10,28 @@ calcMain.addEventListener('click', buttonHandler);
 
 function buttonHandler(event) {
     let target = event.target;
-    if (target.classList.contains('numBtn') && display.innerText.length < 10) {
-        state += target.innerText;
+    if (target.classList.contains ('numBtn') && (display.innerText.length < 10)) {
+        state += parseFloat(target.innerText);
         display.innerText = state;
-    } else if (target.classList.contains('opBtn')) {
-        if (!operation) {
-            if ((mem) && (state)){
-                operate(target.id)
-            } else if ((mem) && (!state)) {
-                operation += target.id;
-                state = "";
-                
-            }
-        } else {
-            operation = target.id;
-            operate(target.id);
-
-        }
-    } else if (target.classList.contains('equal')) {
-        if ((mem) && (state)) {
-            operate(operation);
-        } else {
-            console.log("empty operation")
-        }
-    } else if (target.classList.contains('clr')) {
-        clear();
-    } else {
-        display.innerText = "Err";
     }
+    if (target.classList.contains('opBtn')) {
+        if (!op) {
+            if (!mem) {
+            mem = state;
+            state = "";
+            op = target.id;
+            }
+            else if (mem) {
+                op = target.id;
+                state = "";
+            }
+        }
+        else if (op) {
+            operate(target.id);
+        }
+    }
+    if (target.classList.contains('clr')) { clear(); }
+    if (target.classList.contains('equal')) { operate(op); }
 }
 
 function operate(op) {
@@ -58,28 +52,31 @@ function operate(op) {
             answer = mult(parseFloat(mem), parseFloat(state));
             equalFinish();
             break;
+        default:
+            display.innerText = "Err";
     }
 }
 
-
 function equalFinish() {
     state = "";
-    mem = answer;
-    display.innerText = answer;
-    operation = "";
+    mem = parseFloat(answer);
+    display.innerText = parseFloat(answer);
+    op = "";
 }
 
 function clear() {
     state = "";
     mem = "";
     display.innerText = "0";
-    operator = "";
-    console.log(state, mem, display.innerText, operator, "We're clear");
+    op = "";
+    console.log(state, mem, display.innerText, op, "We're clear");
 }
 
 function error() {
-    display.innerText = "ERROR"
-    clear()
+    display.innerText = "ERROR";
+    state = "";
+    op = "";
+    mem = "";
 }
 
 function add(a, b) {
