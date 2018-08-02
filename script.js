@@ -1,7 +1,7 @@
 let state = "";
 let mem = "";
 let op = "";
-let answer = "";
+let readyFlag = false;
 
 const display = document.querySelector('.display');
 const calcMain = document.querySelector('.buttonGroup');
@@ -15,19 +15,32 @@ function buttonHandler(event) {
         display.innerText = state;
     }
     if (target.classList.contains('opBtn')) {
-        if (!op) {
-            if (!mem) {
-            mem = state;
+    //     if (!op) {
+    //         if (!mem) {
+    //         mem = state;
+    //         state = "";
+    //         op = target.id;
+    //         }
+    //         else if (mem) {
+    //             op = target.id;
+    //             state = "";
+    //         }
+    //     }
+    //     else if (op) {
+    //         operate(target.id);
+    //     }
+    // }
+        if (!readyFlag) {
+            mem = display.innerText;
             state = "";
             op = target.id;
-            }
-            else if (mem) {
-                op = target.id;
-                state = "";
-            }
+            readyFlag = true;
         }
-        else if (op) {
-            operate(target.id);
+        else if (readyFlag) {
+            op = target.id;
+            operate(target.id)
+            readyFlag = false;
+            
         }
     }
     if (target.classList.contains('clr')) { clear(); }
@@ -37,19 +50,19 @@ function buttonHandler(event) {
 function operate(op) {
     switch (op) {
         case "add":
-            answer = add(parseFloat(mem), parseFloat(state));
+            mem = add(parseFloat(mem), parseFloat(state));
             equalFinish();
             break;
         case "sub":
-            answer = sub(parseFloat(mem), parseFloat(state));
+            mem = sub(parseFloat(mem), parseFloat(state));
             equalFinish();
             break;
         case "divide":
-            answer = divide(parseFloat(mem), parseFloat(state));
+            mem = divide(parseFloat(mem), parseFloat(state));
             equalFinish();
             break;
         case "mult":
-            answer = mult(parseFloat(mem), parseFloat(state));
+            mem = mult(parseFloat(mem), parseFloat(state));
             equalFinish();
             break;
         default:
@@ -59,9 +72,9 @@ function operate(op) {
 
 function equalFinish() {
     state = "";
-    mem = parseFloat(answer);
-    display.innerText = parseFloat(answer);
+    display.innerText = parseFloat(mem);
     op = "";
+    readyFlag = false;
 }
 
 function clear() {
@@ -69,6 +82,7 @@ function clear() {
     mem = "";
     display.innerText = "0";
     op = "";
+    readyFlag = false;
     console.log(state, mem, display.innerText, op, "We're clear");
 }
 
@@ -79,14 +93,9 @@ function error() {
     mem = "";
 }
 
-function add(a, b) {
-    return a + b;
-}
-
-function sub(a, b) {
-    return a - b;
-}
-
+function add(a, b) { return a + b; }
+function sub(a, b) { return a - b; }
+function mult(a, b) { return a * b; }
 function divide(a, b) {
     if (b === "0") {
         error();
@@ -95,6 +104,6 @@ function divide(a, b) {
     }
 }
 
-function mult(a, b) {
-    return a * b;
+function currentStates() {
+    console.log(`Operator: ${op}, State: ${state}, Memory: ${mem}, ReadyFlag: ${readyFlag} `)
 }
