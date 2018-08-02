@@ -72,8 +72,7 @@ function operate(op) {
 
 function equalFinish() {
     state = "";
-    display.innerText = parseFloat(mem);
-    op = "";
+    display.innerText = parseFloat(mem).toFixed(4);
     readyFlag = false;
 }
 
